@@ -6,6 +6,7 @@ using UnityEngine;
 public class HealthManager : MonoBehaviour
 {
     [SerializeField] private int _health = 50;
+    [SerializeField] private ParticleSystem hitEffect;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -14,6 +15,7 @@ public class HealthManager : MonoBehaviour
         if (damageDealer != null)
         {
             TakeDamage(damageDealer.GetDamage());
+            PlayHitEffect();
             damageDealer.Hit();
         }
     }
@@ -24,6 +26,15 @@ public class HealthManager : MonoBehaviour
         if (_health <= 0)
         {
             Destroy(gameObject);
+        }
+    }
+
+    void PlayHitEffect()
+    {
+        if (hitEffect != null)
+        {
+            ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Destroy(instance.gameObject, instance.main.duration + instance.main.startLifetime.constantMax);
         }
     }
 }

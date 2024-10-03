@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private BgScroll _bgScroll;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float paddingLeft;
     [SerializeField] private float paddingRight;
@@ -16,6 +18,13 @@ public class Player : MonoBehaviour
     private Vector2 minBounds;
     private Vector2 maxBounds;
 
+    private Shooter _shooter;
+
+    private void Awake()
+    {
+        _shooter = GetComponent<Shooter>();
+    }
+
 
     private void Start()
     {
@@ -25,6 +34,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Move();
+        OnMoveForwoardBgScrollFaster();
     }
 
     void InitBounds()
@@ -49,5 +59,29 @@ public class Player : MonoBehaviour
     void OnMove(InputValue value)
     {
         rawInput = value.Get<Vector2>();
+    }
+
+    void OnFire(InputValue value)
+    {
+        if (_shooter != null)
+        {
+            _shooter.isFiring = value.isPressed;
+        }
+    }
+
+    void OnMoveForwoardBgScrollFaster()
+    {
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+        {
+            _bgScroll.scrollSpeed = 9f;
+        }
+        else if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        {
+            _bgScroll.scrollSpeed = 3f;
+        }
+        else
+        {
+            _bgScroll.scrollSpeed = 4f;
+        }
     }
 }
