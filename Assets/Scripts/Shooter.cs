@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -21,8 +22,14 @@ public class Shooter : MonoBehaviour
     [HideInInspector]public bool isFiring;
     
     private Coroutine fireCoroutine;
-    
-    
+    private AudioPlayer _audioPlayer;
+
+
+    private void Awake()
+    {
+        _audioPlayer = FindObjectOfType<AudioPlayer>();
+    }
+
     void Start()
     {
         if (useAI)
@@ -66,6 +73,8 @@ public class Shooter : MonoBehaviour
             float timeToNextProjectile = Random.Range(baseFiringRate - firingRateVariance,
                 baseFiringRate + firingRateVariance);
             timeToNextProjectile = Mathf.Clamp(timeToNextProjectile, minimumFiringRate, float.MaxValue);
+            
+            _audioPlayer.PlayShootingClip();
             yield return new WaitForSeconds(timeToNextProjectile);
         }        
     }
