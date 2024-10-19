@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpriteScroller : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class SpriteScroller : MonoBehaviour
 
     private Vector2 offset;
     private Material _material;
+    private SceneManager _sceneManager;
+    private Scene _currentActiveScene;
     
     void Awake()
     {
         _material = GetComponent<SpriteRenderer>().material;
+        _currentActiveScene = SceneManager.GetActiveScene();
     }
     
     void Update()
@@ -23,6 +27,10 @@ public class SpriteScroller : MonoBehaviour
     
     void OnPlayerMoveScrollDirection()
     {
+        if (_currentActiveScene.ToString() != "Game")
+        {
+            return;
+        }
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             moveSpeed.y = 0.35f;
