@@ -9,28 +9,27 @@ public class SpriteScroller : MonoBehaviour
 
     private Vector2 offset;
     private Material _material;
-    private SceneManager _sceneManager;
-    private Scene _currentActiveScene;
+    private LevelManager _levelManager;
     
     void Awake()
     {
         _material = GetComponent<SpriteRenderer>().material;
-        _currentActiveScene = SceneManager.GetActiveScene();
+        _levelManager = FindObjectOfType<LevelManager>();
     }
     
     void Update()
     {
         offset = moveSpeed * Time.deltaTime;
         _material.mainTextureOffset += offset;
-        OnPlayerMoveScrollDirection();
+        //TODO need to fix the issue of BG scrolling direction when on game scene related to scene manager current active scene index
+        if (_levelManager.GetCurrentActiveSceneIndex() == 1)
+        {
+            OnPlayerMoveScrollDirection();
+        }
     }
     
     void OnPlayerMoveScrollDirection()
     {
-        if (_currentActiveScene.ToString() != "Game")
-        {
-            return;
-        }
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             moveSpeed.y = 0.35f;
